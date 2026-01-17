@@ -1,13 +1,17 @@
 package com.project.newsapp.di
 
+import android.content.Context
 import com.project.newsapp.BuildConfig
 import com.project.newsapp.data.remote.NewsRESTAPI
 import com.project.newsapp.data.repository_impl.RemoteRepositorySource
 import com.project.newsapp.domain.Repository
+import com.project.newsapp.domain.network.NetworkConnection
+import com.project.newsapp.domain.network.NetworkConnectivityObserver
 import com.project.newsapp.domain.usecase.FetchTopHeadlines
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
 import okhttp3.OkHttpClient
@@ -63,8 +67,10 @@ object AppModule {
         return RemoteRepositorySource(newsRESTAPI)
     }
 
-
-
-
+    @Provides
+    @Singleton
+    fun  providesNetworkObserverImpl(@ApplicationContext context: Context): NetworkConnection{
+        return NetworkConnectivityObserver(context)
+    }
 
 }

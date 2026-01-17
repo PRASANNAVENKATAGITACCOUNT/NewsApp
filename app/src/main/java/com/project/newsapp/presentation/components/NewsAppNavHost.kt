@@ -6,71 +6,71 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.project.newsapp.presentation.constants.CATEGORY
+import com.project.newsapp.presentation.constants.NEWSAPP_CATEGORY_PATH
 import com.project.newsapp.presentation.MainViewModel
-import com.project.newsapp.presentation.category.CategoryScreen
+import com.project.newsapp.presentation.screens.CategoryScreen
 
 @Composable
 fun NewsAppNavHost(navController: NavHostController, startDestination: String) {
     NavHost(navController, startDestination = startDestination) {
-        composable(CATEGORY.TOP_HEADLINES.route) {
+        composable(NEWSAPP_CATEGORY_PATH.TOP_HEADLINES.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.TOP_HEADLINES.route) {
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.TOP_HEADLINES.route) {
                 viewModel.fetchData()
             }
             CategoryScreen(
                 state=viewModel.state
             )
         }
-        composable(CATEGORY.BUSINESS.route) {
+        composable(NEWSAPP_CATEGORY_PATH.BUSINESS.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.BUSINESS.route) {
-                viewModel.fetchBasedOnCategory(CATEGORY.BUSINESS.route)
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.BUSINESS.route) {
+                viewModel.fetchBasedOnCategory(NEWSAPP_CATEGORY_PATH.BUSINESS.route)
             }
             CategoryScreen(
                 state=viewModel.state
             )
         }
-        composable(CATEGORY.ENTERTAINMENT.route) {
+        composable(NEWSAPP_CATEGORY_PATH.ENTERTAINMENT.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.ENTERTAINMENT.route) {
-                viewModel.fetchBasedOnCategory(CATEGORY.ENTERTAINMENT.route)
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.ENTERTAINMENT.route) {
+                viewModel.fetchBasedOnCategory(NEWSAPP_CATEGORY_PATH.ENTERTAINMENT.route)
             }
             CategoryScreen(
                 state=viewModel.state
             )
         }
-        composable(CATEGORY.GENERAL.route) {
+        composable(NEWSAPP_CATEGORY_PATH.GENERAL.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.GENERAL.route) {
-                viewModel.fetchBasedOnCategory(CATEGORY.GENERAL.route)
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.GENERAL.route) {
+                viewModel.fetchBasedOnCategory(NEWSAPP_CATEGORY_PATH.GENERAL.route)
             }
             CategoryScreen(
                 state=viewModel.state
             )
         }
-        composable(CATEGORY.HEALTH.route) {
+        composable(NEWSAPP_CATEGORY_PATH.HEALTH.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.HEALTH.route) {
-                viewModel.fetchBasedOnCategory(CATEGORY.HEALTH.route)
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.HEALTH.route) {
+                viewModel.fetchBasedOnCategory(NEWSAPP_CATEGORY_PATH.HEALTH.route)
             }
             CategoryScreen(
                 state=viewModel.state
             )
         }
-        composable(CATEGORY.SCIENCE.route) {
+        composable(NEWSAPP_CATEGORY_PATH.SCIENCE.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.SCIENCE.route) {
-                viewModel.fetchBasedOnCategory(CATEGORY.SCIENCE.route)
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.SCIENCE.route) {
+                viewModel.fetchBasedOnCategory(NEWSAPP_CATEGORY_PATH.SCIENCE.route)
             }
             CategoryScreen(
                 state= viewModel.state
             )
         }
-        composable(CATEGORY.TECHNOLOGY.route) {
+        composable(NEWSAPP_CATEGORY_PATH.TECHNOLOGY.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            LaunchedEffect(CATEGORY.TECHNOLOGY.route) {
-                viewModel.fetchBasedOnCategory(CATEGORY.TECHNOLOGY.route)
+            LaunchedEffect(NEWSAPP_CATEGORY_PATH.TECHNOLOGY.route) {
+                viewModel.fetchBasedOnCategory(NEWSAPP_CATEGORY_PATH.TECHNOLOGY.route)
             }
             CategoryScreen(
                 state= viewModel.state

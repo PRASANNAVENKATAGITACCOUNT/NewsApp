@@ -1,4 +1,4 @@
-package com.project.newsapp.presentation.category
+package com.project.newsapp.presentation.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,13 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.project.newsapp.domain.data.Article
 import com.project.newsapp.domain.data.NewsData
 import com.project.newsapp.domain.data.NewsDataState
 import com.project.newsapp.presentation.components.ArticleComponent
-import com.project.newsapp.ui.theme.NewsAppTheme
+import com.project.newsapp.presentation.ui.theme.NewsAppTheme
 
 
 @Composable
@@ -37,10 +39,14 @@ fun CategoryScreen(state: NewsDataState) {
             state.error!=null->{
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.CenterHorizontally),
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Text(state.error)
+                    Text(
+                        text="${state.error}",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
             state.data?.articles != null -> {

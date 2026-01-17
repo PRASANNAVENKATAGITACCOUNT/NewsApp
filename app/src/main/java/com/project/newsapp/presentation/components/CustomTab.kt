@@ -15,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.newsapp.presentation.constants.CATEGORY
+import com.project.newsapp.presentation.constants.NEWSAPP_CATEGORY_PATH
 
 
 @Preview(showBackground = true)
 @Composable
 fun CustomTab(title: String="business") {
-    val tabTitle = if(title== CATEGORY.TOP_HEADLINES.route)
-        CATEGORY.TOP_HEADLINES.route
+    val tabTitle = if(title== NEWSAPP_CATEGORY_PATH.TOP_HEADLINES.route)
+        NEWSAPP_CATEGORY_PATH.TOP_HEADLINES.route
     else
         "${title[0].uppercase()}${title.substring(1)}"
 
