@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">NewsApp</string>
+    <string name="app_name">News Wave</string>
     <string name="title_activity_search_news">SearchNewsActivity</string>
+    <string name="title_activity_article_screen">ArticleScreenActivity</string>
+    <string name="news_notification_channel">NEWS_CHANNEL</string>
+    <string name="news_channel_description">NEWS_CHANNEL</string>
 </resources>

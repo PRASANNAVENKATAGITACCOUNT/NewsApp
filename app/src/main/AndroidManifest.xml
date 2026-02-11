@@ -2,29 +2,41 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:name=".NewsApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/news_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/news_app_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NewsApp">
+        android:theme="@style/Theme.NewsApp.SplashScreen">
         <activity
-            android:name=".presentation.SearchNewsActivity"
+            android:name=".presentation.screens.article_screen.ArticleScreenActivity"
+            android:exported="false"
+            android:label="@string/title_activity_article_screen"
+            android:theme="@style/Theme.NewsApp" />
+        <activity
+            android:name=".presentation.screens.search_news_screen.SearchNewsActivity"
             android:exported="false"
             android:label="@string/title_activity_search_news"
             android:theme="@style/Theme.NewsApp" />
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.screens.home_screen.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.NewsApp">
+            android:theme="@style/Theme.NewsApp.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

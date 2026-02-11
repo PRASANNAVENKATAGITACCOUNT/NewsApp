@@ -10,10 +10,14 @@ sealed class NEWSAPP_CATEGORY_PATH(val route: String) {
     object SCIENCE : NEWSAPP_CATEGORY_PATH("science")
     object TECHNOLOGY : NEWSAPP_CATEGORY_PATH("technology")
 
+    object SHOW_ARTICLE_SCREEN : NEWSAPP_CATEGORY_PATH("")
+
     companion object{
+
+
         fun getAllCategories() : List<NEWSAPP_CATEGORY_PATH>{
             return listOf(
-                TOP_HEADLINES, BUSINESS, ENTERTAINMENT, GENERAL,
+                BUSINESS, ENTERTAINMENT, GENERAL,
                 HEALTH, SCIENCE, TECHNOLOGY
             )
         }
@@ -21,3 +25,5 @@ sealed class NEWSAPP_CATEGORY_PATH(val route: String) {
 
 
 }
+
+const val NEWS_TOP_HEADLINES="top-headlines"

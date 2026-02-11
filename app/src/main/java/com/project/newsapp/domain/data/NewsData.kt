@@ -1,10 +1,12 @@
 package com.project.newsapp.domain.data
 
+import java.io.Serializable
+
 
 data class NewsData(
-    val articles: List<Article?>?,
-    val status: String?,
-    val totalResults: Int?,
+    val articles: MutableList<Article?>?= mutableListOf(),
+    val status: String?="",
+    val totalResults: Int?=0,
     val code: String?=null,
     val message : String?= null
 )
@@ -17,10 +19,15 @@ data class Article(
     val source: Source?=null,
     val title: String?=null,
     val url: String?=null,
+    var category: String="",
     val urlToImage: String?=null
-)
+): Serializable {
+
+}
 
 data class Source(
     val id: String?,
     val name: String?
-)
+): Serializable{
+
+}

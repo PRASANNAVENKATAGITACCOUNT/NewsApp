@@ -1,33 +1,29 @@
 package com.project.newsapp.domain.usecase
 
-import android.util.Log
 import com.project.newsapp.data.repository_impl.LocalRepositorySource
 import com.project.newsapp.data.repository_impl.RemoteRepositorySource
-import com.project.newsapp.domain.data.NewsData
 import com.project.newsapp.domain.data.NewsDataState
 import com.project.newsapp.domain.network.NetworkConnection
-import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
-class FetchTopHeadlines @Inject constructor(
+class FetchAllCategoryNews@Inject constructor(
     val remoteRepository: RemoteRepositorySource,
     val localRepositorySource: LocalRepositorySource,
     private val networkConnectivityObserver: NetworkConnection,
-    )  {
+) {
 
-    operator fun invoke(countryCode: String): Flow<NewsDataState> = flow {
+    operator fun invoke() : Flow<NewsDataState> = flow {
         networkConnectivityObserver.isConnected().collect { networkStatus ->
             emit(NewsDataState(loading = true, data = null,error=null))
-            val newsData = if(networkStatus){
-                remoteRepository.getTopHeadings(countryCode)
+            val newsData= if(networkStatus){
+                remoteRepository.getNewsFromAllCategory()
             }else{
-                localRepositorySource.getTopHeadings(countryCode)
+                localRepositorySource.getNewsFromAllCategory()
             }
-            Log.d("FETCH_TOP_CATEGORY ", "invoke: $newsData")
             val errorMessage = if(newsData==null) "No Data Found"
             else if(newsData.status!=null && newsData.status == "error")
                 newsData.message?:"No Error Message Found"
@@ -44,5 +40,4 @@ class FetchTopHeadlines @Inject constructor(
         }
 
     }.flowOn(Dispatchers.IO)
-
 }

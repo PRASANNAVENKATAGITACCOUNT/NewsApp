@@ -21,9 +21,7 @@ import com.project.newsapp.presentation.constants.NEWSAPP_CATEGORY_PATH
 @Preview(showBackground = true)
 @Composable
 fun CustomTab(title: String="business") {
-    val tabTitle = if(title== NEWSAPP_CATEGORY_PATH.TOP_HEADLINES.route)
-        NEWSAPP_CATEGORY_PATH.TOP_HEADLINES.route
-    else
+    val tabTitle =
         "${title[0].uppercase()}${title.substring(1)}"
 
     OutlinedCard(
