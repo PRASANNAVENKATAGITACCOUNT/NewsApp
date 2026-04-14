@@ -2,17 +2,14 @@ package com.project.newsapp.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.project.newsapp.BuildConfig
 import com.project.newsapp.data.local.NewsAppDatabase
 import com.project.newsapp.data.local.NewsAppDatabase.Companion.NEWS_DATABASE_NAME
 import com.project.newsapp.data.remote.NewsRESTAPI
 import com.project.newsapp.data.repository_impl.LocalRepositorySource
 import com.project.newsapp.data.repository_impl.RemoteRepositorySource
-import com.project.newsapp.domain.Repository
 import com.project.newsapp.domain.network.NetworkConnection
 import com.project.newsapp.domain.network.NetworkConnectivityObserver
-import com.project.newsapp.domain.usecase.FetchTopHeadlines
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,8 +55,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesNewsDatabaseInstance(@ApplicationContext  applicationContext: Context): NewsAppDatabase{
-         return  Room.databaseBuilder(applicationContext, NewsAppDatabase::class.java,NEWS_DATABASE_NAME).build()
+    fun providesNewsDatabaseInstance(@ApplicationContext  context: Context): NewsAppDatabase{
+         return  Room.databaseBuilder(context, NewsAppDatabase::class.java,NEWS_DATABASE_NAME).build()
     }
 
 

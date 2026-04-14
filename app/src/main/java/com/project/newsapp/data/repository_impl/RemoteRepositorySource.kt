@@ -1,20 +1,19 @@
 package com.project.newsapp.data.repository_impl
 
 import android.util.Log
-import androidx.compose.foundation.interaction.HoverInteraction
 import com.project.newsapp.data.remote.NewsRESTAPI
+import com.project.newsapp.data.remote.dto.NewsDataDto
 import com.project.newsapp.data.toArticle
 import com.project.newsapp.data.toNewsData
 import com.project.newsapp.domain.Repository
-import com.project.newsapp.domain.data.Article
 import com.project.newsapp.domain.data.NewsData
 import com.project.newsapp.presentation.constants.NEWSAPP_CATEGORY_PATH
 import com.project.newsapp.presentation.constants.NEWS_TOP_HEADLINES
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import retrofit2.Response
+import kotlin.collections.flatMap
 
 
 class RemoteRepositorySource(val newsAPI: NewsRESTAPI): Repository {
@@ -28,7 +27,7 @@ class RemoteRepositorySource(val newsAPI: NewsRESTAPI): Repository {
         return newsData
     }
 
-    override suspend fun getNewsOnQuery(query: String): NewsData? {
+    override suspend fun getNewsOnQuery(query: String) : NewsData? {
         return newsAPI.getNewsOnQuery(query=query).body()?.toNewsData()
     }
 
@@ -63,12 +62,11 @@ class RemoteRepositorySource(val newsAPI: NewsRESTAPI): Repository {
                     ?.map { it?.toArticle()?.copy(category = category.route) }
                     ?: emptyList()
             }.toMutableList(),
-            message = responses
-                .mapNotNull { (category, response) ->
+            message = responses.mapNotNull { (category, response) ->
                     response.body()?.message?.let {
                         "${category.route}: $it"
                     }
-                }.joinToString(" | ")
+            }.joinToString(" | ")
         )
     }
 
@@ -77,6 +75,25 @@ class RemoteRepositorySource(val newsAPI: NewsRESTAPI): Repository {
             article?.category = categoryText
         }
         return newsData
+    }
+
+    suspend fun getNewsFromFollowings(followings: List<String>) = coroutineScope{
+        val request = followings.map { topic->
+            async {
+                topic to newsAPI.getNewsOnQuery(topic)
+            }
+        }
+         val response : List<Pair<String, Response<NewsDataDto>>?>  = request.mapNotNull { differed->
+            try {
+                differed.await()
+            }catch (e: Exception){
+                Log.e(TAG,"${e.message}")
+                null
+            }
+        }
+       
+        response.flatMap { pair -> pair?.second?.body()?.articles ?: emptyList() }
+
     }
 
 }

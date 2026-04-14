@@ -3,13 +3,16 @@ package com.project.newsapp.presentation.screens.auth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,31 +24,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.project.newsapp.R
 import com.project.newsapp.domain.data.UserData
 import com.project.newsapp.presentation.components.InputFieldUI
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreen(
+fun RegistrationScreen(
     userEmail: String="",
     userPassword: String="",
+    confirmUserPassword: String="",
     onEmailChange: (String)-> Unit={},
     onPasswordChange: (String)-> Unit={},
-    onClickSignUp:()-> Unit={},
-    onClickLoginButton:()-> Unit={},
+    onConfirmUserPasswordChange: (String)-> Unit={},
+    onClickRegisterUser:()-> Unit={}
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top=8.dp, start = 5.dp, end = 5.dp, bottom = 5.dp),
+            .padding(top=8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
         Text(
-            text = " Log In ",
+            text = " Register ",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold
         )
@@ -68,45 +72,21 @@ fun LoginScreen(
             label = "Password"
         )
 
+        InputFieldUI(
+            textValue = confirmUserPassword,
+            onValueChange = { password ->
+                onConfirmUserPasswordChange.invoke(password)
+            },
+            leadingIcon = R.drawable.lock,
+            forPassword = true,
+            label = "Confirm Password"
+        )
+
         Button(onClick = {
-            onClickLoginButton.invoke()
+            onClickRegisterUser.invoke()
         }) {
-            Text("Log In")
+            Text("Register")
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Don't have an account ", fontSize = 15.sp)
-            Text(text = "SignUp", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        }
-
-        HorizontalDivider(Modifier
-            .padding(5.dp)
-            .height(5.dp)
-            .fillMaxWidth(0.9f))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "OR")
-            Button(onClick = {}, modifier = Modifier.fillMaxWidth(0.4f)) {
-                Text(text = "Google")
-            }
-        }
     }
 }
-
-
-
-
-
-

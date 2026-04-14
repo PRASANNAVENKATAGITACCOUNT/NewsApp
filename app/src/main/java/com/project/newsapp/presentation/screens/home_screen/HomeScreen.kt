@@ -3,6 +3,7 @@ package com.project.newsapp.presentation.screens.home_screen
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,11 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,10 +33,10 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.carousel.CarouselItemScope
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,82 +63,46 @@ import com.project.newsapp.presentation.components.ArticleComponent
 import com.project.newsapp.presentation.components.CustomTab
 import com.project.newsapp.presentation.components.TitleComponent
 import com.project.newsapp.presentation.constants.NEWSAPP_CATEGORY_PATH
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun HomeScreen() {
     var selectedDestination by rememberSaveable { mutableIntStateOf(0) }
     val context = LocalContext.current
     var topHeadlinesArticle by remember {
         mutableStateOf(emptyList<Article?>())
     }
 
-    val viewModel = hiltViewModel<MainViewModel>()
-    topHeadlinesArticle = viewModel.topHeadLinesState.data?.articles?.filter { it-> it?.urlToImage!=null } ?: emptyList()
+    val viewModel = hiltViewModel<HomeViewModel>()
+    topHeadlinesArticle =
+        viewModel.topHeadLinesState.data?.articles?.filter { it -> it?.urlToImage != null }
+            ?: emptyList()
     Log.d("MainScreen ", "List Of Articles $topHeadlinesArticle")
 
     val listState = rememberLazyListState()
-
-    Scaffold(
-        topBar = {
-            NewsTopAppBar {
-                val intent = Intent(context, SearchNewsActivity::class.java)
-                context.startActivity(intent)
-            }
-        }
-    ) { innerPadding->
-
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         LazyColumn(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-        ) {
+        )
+        {
             // Carousel Heading
             item {
                 TitleComponent("Top Headlines ")
             }
             // Carousel
             item {
-                HorizontalMultiBrowseCarousel(
-                    state = rememberCarouselState { topHeadlinesArticle.size },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(top = 16.dp, bottom = 16.dp, start = 10.dp, end = 10.dp),
-                    preferredItemWidth = 186.dp,
-                    itemSpacing = 8.dp,
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) { i ->
-                    val item = topHeadlinesArticle[i]
-                    Box(
-                        modifier = Modifier
-                            .height(190.dp)
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .maskClip(MaterialTheme.shapes.extraLarge),
-                            model = item?.urlToImage ?: R.drawable.flower_image,
-                            contentDescription = "",
-                            contentScale = ContentScale.Crop
-                        )
-                        Column(
-                            Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Bottom,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                item?.author ?: "",
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Center,
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                ),
-                                modifier = Modifier.padding(5.dp)
-                            )
-                        }
+                if (topHeadlinesArticle.isNotEmpty()) {
+                    TopNewsUICarousel(topHeadlinesArticle){
+                        val intent = Intent(context, ArticleScreenActivity::class.java)
+                        intent.putExtra("article", it)
+                        context.startActivity(intent)
                     }
                 }
             }
@@ -191,14 +161,14 @@ fun MainScreen() {
                     }
                 }
 
-                viewModel.selectedCategory.isNotEmpty() ->{
-                    val newsList=viewModel.getNewsBasedOnCategory()
+                viewModel.selectedCategory.isNotEmpty() -> {
+                    val newsList = viewModel.getNewsBasedOnCategory()
                     Log.d("MainScreen : ", " $newsList ")
                     items(
                         items = newsList,
                     ) { article ->
                         article?.let {
-                            ArticleComponent(article) { navigationArticle->
+                            ArticleComponent(article) { navigationArticle ->
                                 val intent = Intent(context, ArticleScreenActivity::class.java)
                                 intent.putExtra("article", navigationArticle)
                                 context.startActivity(intent)
@@ -212,20 +182,59 @@ fun MainScreen() {
     }
 }
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsTopAppBar(onClickOfSearch:()-> Unit) {
-    TopAppBar(
-        title = {Text("NEWS APP")},
-        modifier = Modifier,
-        actions = {
-            IconButton(onClick = {
-                onClickOfSearch()
-            }) {
-                Icon(Icons.Default.Search, contentDescription = "Search Icon")
-            }
-        },
-    )
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TopNewsUICarousel(
+    topHeadlinesArticle: List<Article?>,
+    pagerState: PagerState = rememberPagerState(pageCount={topHeadlinesArticle.size}),
+    navigateToArticle:(Article)-> Unit
+) {
+    HorizontalPager(state = pagerState) { page->
+        CarouselItem(topHeadlinesArticle[page]){article ->
+            navigateToArticle.invoke(article)
+        }
+    }
 }
+
+@Composable
+private fun CarouselItem(item: Article?= Article(), onClick:(Article)-> Unit) {
+    Box(
+        modifier = Modifier
+            .clickable{
+                item?.let {
+                    onClick.invoke(it)
+                }
+            }
+            .padding(20.dp)
+            .fillMaxWidth()
+            .height(190.dp)
+            .clip(RoundedCornerShape(18.dp))
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize(),
+            model = item?.urlToImage ?: R.drawable.flower_image,
+            contentDescription = "",
+            contentScale = ContentScale.Crop
+        )
+        Column(
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                item?.author ?: "",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                modifier = Modifier.padding(5.dp)
+            )
+        }
+    }
+}
+
+
+

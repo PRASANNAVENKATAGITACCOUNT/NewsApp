@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <queries>
         <intent>
             <action android:name="android.speech.RecognitionService" />
@@ -22,6 +23,19 @@
         android:roundIcon="@drawable/news_app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsApp.SplashScreen">
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.render-start-up"
+            android:exported="false"
+            tools:node="merge"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="removed"
+                tools:replace="android:value"/>
+        </provider>
+
         <activity
             android:name=".presentation.screens.article_screen.ArticleScreenActivity"
             android:exported="false"
@@ -33,7 +47,7 @@
             android:label="@string/title_activity_search_news"
             android:theme="@style/Theme.NewsApp" />
         <activity
-            android:name=".presentation.screens.home_screen.MainActivity"
+            android:name=".presentation.screens.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.NewsApp.SplashScreen">

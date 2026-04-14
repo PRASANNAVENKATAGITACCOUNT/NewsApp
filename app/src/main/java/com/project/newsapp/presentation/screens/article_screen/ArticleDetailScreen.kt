@@ -1,6 +1,9 @@
 package com.project.newsapp.presentation.screens.article_screen
 
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,8 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.project.newsapp.R
 import com.project.newsapp.domain.data.Article
 import com.project.newsapp.presentation.components.ArticleTopAppBar
+import com.project.newsapp.presentation.components.CustomIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -39,16 +44,10 @@ fun ArticleScreen(article: Article= Article(title="Article Title",
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp),
-        topBar = {
-            ArticleTopAppBar {
-                onBackPress.invoke()
-            }
-        }
     ) {innerPadding->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
         ) {
             val textList = listOf<Pair<String?, Int>>(article.title to 25, article.author to 18, article.content to 18, article.description to 18)
             LazyColumn(
@@ -56,20 +55,32 @@ fun ArticleScreen(article: Article= Article(title="Article Title",
             ) {
                 item {
                     article.urlToImage?.let { imageUrl->
-                        AsyncImage(
-                            model= imageUrl,
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(15.dp)
-                                .fillMaxHeight(0.5f)
-                                .clip(RoundedCornerShape(30.dp)),
-                            contentDescription = "News Image ",
-                        )
+                                .fillMaxHeight(0.6f)
+                        ) {
+                            AsyncImage(
+                                model= imageUrl,
+                                modifier = Modifier.fillMaxSize().padding(start = 5.dp,end =5.dp)
+                                    .clip(RoundedCornerShape(25.dp)),
+                                contentDescription = "News Image ",
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.2f),
+                                verticalArrangement = Arrangement.Top
+                            ) {
+                                ArticleTopAppBar {
+                                    onBackPress.invoke()
+                                }
+                            }
+                        }
                     }
                 }
                 item {
-                    Row(modifier = Modifier.fillMaxWidth().height(45.dp)) {
-
+                    Row(modifier = Modifier.fillMaxWidth().height(45.dp), horizontalArrangement = Arrangement.End) {
+                        CustomIcon(R.drawable.bookmark_icon){}
+                        CustomIcon(R.drawable.share_icon){}
                     }
                 }
                 items(textList.size){ index->

@@ -16,12 +16,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val fetchTopHeadlines: FetchTopHeadlines,
     private val fetchAllCategoryNews: FetchAllCategoryNews,
     private val storeAllNewsData: StoreAllNewsData
@@ -60,7 +59,6 @@ class MainViewModel @Inject constructor(
             topHeadLinesState = newsDataState
             Log.d(TAG, "fetchNewsTopHeadings: ${topHeadLinesState.data}")
         }
-
     }
 
 
@@ -78,7 +76,6 @@ class MainViewModel @Inject constructor(
                 saveAllData(news)
             }
         }
-
     }
 
     private fun saveAllData(newsData: NewsData){
